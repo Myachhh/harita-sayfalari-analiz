@@ -13,7 +13,7 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9'
 }
 
-print("Rakip analizi ve Gelişmiş Web Paneli (Profil Kartlı) hazırlığı başlıyor...\n")
+print("Rakip analizi ve Gelişmiş Web Paneli (Filtre Düzeltmesi) başlıyor...\n")
 
 tarih_formatli = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y - %H:%M")
 tarih_kisa = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y")
@@ -119,17 +119,14 @@ for satir in hesaplar:
 
 dosya_kayit.close()
 
-# Sıralama
 sonuclar = sorted(sonuclar, key=lambda x: x['gercek_sayi'], reverse=True)
 
-# Kendi hesabımızın güncel sayısını vitrin için yakalıyoruz
 benim_sayim = "Bilinmiyor"
 for s in sonuclar:
     if s['hesap'] == "turkishgeopoliticalmaps":
         benim_sayim = s['takipci_metin']
         break
 
-# README.md Güncelleme
 readme_icerik = "# Harita Sayfaları Analiz Paneli\n\n"
 readme_icerik += f"**Son Güncelleme:** {tarih_formatli}\n\n"
 readme_icerik += "| Sıra | Sayfa Adı | Takipçi Sayısı | Değişim |\n"
@@ -142,15 +139,15 @@ for sonuc in sonuclar:
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(readme_icerik)
 
-# HTML Tablo Satırları
 satirlar_html = ""
 sira = 1
 for sonuc in sonuclar:
-    satirlar_html += f"""                <tr class="tablo-satir">
+    # HİLEYİ BURAYA YAPTIK: data-ulke etiketi eklendi!
+    satirlar_html += f"""                <tr class="tablo-satir" data-ulke="{sonuc['bayrak']}">
                     <td class="orta sira">{sira}</td>
                     <td>
                         <a class="link" href="https://instagram.com/{sonuc['hesap']}" target="_blank">@{sonuc['hesap']}</a>
-                        <span class="bayrak-sutun bayrak">{sonuc['bayrak']}</span>
+                        <span class="bayrak">{sonuc['bayrak']}</span>
                     </td>
                     <td class="sag sayi">{sonuc['takipci_metin']}</td>
                     <td class="sag {sonuc['degisim_sinifi']}">{sonuc['degisim']}</td>
@@ -167,7 +164,6 @@ for h in gecmis_veriler:
 
 grafik_json = json.dumps(grafik_data, ensure_ascii=False)
 
-# MUHTEŞEM TASARIM (HTML) GÜNCELLEMESİ
 html_taslak = """<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -207,7 +203,6 @@ html_taslak = """<!DOCTYPE html>
             pointer-events: none;
         }
 
-        /* --- YENİ EKLENEN: SABİT PROFİL KARTI --- */
         .profil-karti {
             position: fixed;
             top: 40px;
@@ -260,7 +255,6 @@ html_taslak = """<!DOCTYPE html>
             margin-top: 4px;
         }
         
-        /* Ekran küçüldüğünde (Laptop/Tablet/Telefon) kartı ortala ve sabitlemeyi bırak */
         @media (max-width: 1300px) {
             body { flex-direction: column; align-items: center; }
             .profil-karti { position: relative; top: 0; left: 0; margin-bottom: 30px; width: 100%; max-width: 300px; }
@@ -294,7 +288,6 @@ html_taslak = """<!DOCTYPE html>
             backdrop-filter: blur(5px);
         }
         
-        /* --- YENİ EKLENEN: FİLTRE KUTUSU --- */
         .filtre-kutusu {
             display: flex;
             align-items: center;
@@ -410,23 +403,19 @@ html_taslak = """<!DOCTYPE html>
         // 1. Emojileri yüksek kaliteye çevir
         twemoji.parse(document.body);
 
-        // 2. Tablo Filtreleme Mantığı
+        // 2. YENİ KUSURSUZ FİLTRE MANTIĞI
         const tabloSatirlari = document.querySelectorAll(".tablo-satir");
         const bayrakSeti = new Set();
         
-        // Tablodaki benzersiz bayrakları bul ve Set içine at
+        // Gizli data-ulke etiketinden bayrakları okuyoruz
         tabloSatirlari.forEach(satir => {
-            // Twemoji kullandığımız için bayrak artık bir <img> etiketi, onun alt (alternatif) textini alıyoruz
-            const emojiImg = satir.querySelector(".bayrak-sutun img");
-            if(emojiImg) {
-                bayrakSeti.add(emojiImg.alt);
-            } else {
-                const duzYazi = satir.querySelector(".bayrak-sutun").innerText.trim();
-                if(duzYazi) bayrakSeti.add(duzYazi);
+            const bayrak = satir.getAttribute("data-ulke").trim();
+            if(bayrak !== "") {
+                bayrakSeti.add(bayrak);
             }
         });
 
-        // Bulunan bayrakları dropdown menüye ekle
+        // Dropdown menüyü dolduruyoruz
         const filtreSelect = document.getElementById("bayrakFiltresi");
         bayrakSeti.forEach(bayrak => {
             const opt = document.createElement("option");
@@ -435,7 +424,7 @@ html_taslak = """<!DOCTYPE html>
             filtreSelect.appendChild(opt);
         });
         
-        // Twemoji filtre içindeki emojileri de düzeltsin
+        // Filtredeki emojileri de düzelt
         twemoji.parse(filtreSelect);
 
         function tabloyuFiltrele() {
@@ -443,21 +432,14 @@ html_taslak = """<!DOCTYPE html>
             let siraSayaci = 1;
             
             tabloSatirlari.forEach(satir => {
-                const emojiImg = satir.querySelector(".bayrak-sutun img");
-                let satirBayragi = "";
-                if(emojiImg) {
-                    satirBayragi = emojiImg.alt;
-                } else {
-                    satirBayragi = satir.querySelector(".bayrak-sutun").innerText.trim();
-                }
+                const bayrak = satir.getAttribute("data-ulke").trim();
 
-                if(secilen === "hepsi" || satirBayragi === secilen) {
-                    satir.style.display = ""; // Göster
-                    // Sıra numarasını filtreye göre yeniden düzenle
+                if(secilen === "hepsi" || bayrak === secilen) {
+                    satir.style.display = ""; 
                     satir.querySelector(".sira").innerText = siraSayaci;
                     siraSayaci++;
                 } else {
-                    satir.style.display = "none"; // Gizle
+                    satir.style.display = "none"; 
                 }
             });
         }
@@ -521,4 +503,4 @@ html_icerik = html_icerik.replace("[BENIM_SAYIM]", benim_sayim)
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_icerik)
 
-print("\nGelişmiş web paneli (Profil Kartı ve Filtre) başarıyla üretildi!")
+print("\nGelişmiş web paneli (Kusursuz Filtre ile) başarıyla üretildi!")
