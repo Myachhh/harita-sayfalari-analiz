@@ -13,7 +13,7 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9'
 }
 
-print("Rakip analizi ve Gelişmiş Grafik Paneli hazırlığı başlıyor...\n")
+print("Rakip analizi ve Gelişmiş Web Paneli (Profil Kartlı) hazırlığı başlıyor...\n")
 
 tarih_formatli = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y - %H:%M")
 tarih_kisa = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y")
@@ -119,8 +119,17 @@ for satir in hesaplar:
 
 dosya_kayit.close()
 
+# Sıralama
 sonuclar = sorted(sonuclar, key=lambda x: x['gercek_sayi'], reverse=True)
 
+# Kendi hesabımızın güncel sayısını vitrin için yakalıyoruz
+benim_sayim = "Bilinmiyor"
+for s in sonuclar:
+    if s['hesap'] == "turkishgeopoliticalmaps":
+        benim_sayim = s['takipci_metin']
+        break
+
+# README.md Güncelleme
 readme_icerik = "# Harita Sayfaları Analiz Paneli\n\n"
 readme_icerik += f"**Son Güncelleme:** {tarih_formatli}\n\n"
 readme_icerik += "| Sıra | Sayfa Adı | Takipçi Sayısı | Değişim |\n"
@@ -133,14 +142,15 @@ for sonuc in sonuclar:
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(readme_icerik)
 
+# HTML Tablo Satırları
 satirlar_html = ""
 sira = 1
 for sonuc in sonuclar:
-    satirlar_html += f"""                <tr>
+    satirlar_html += f"""                <tr class="tablo-satir">
                     <td class="orta sira">{sira}</td>
                     <td>
                         <a class="link" href="https://instagram.com/{sonuc['hesap']}" target="_blank">@{sonuc['hesap']}</a>
-                        <span class="bayrak">{sonuc['bayrak']}</span>
+                        <span class="bayrak-sutun bayrak">{sonuc['bayrak']}</span>
                     </td>
                     <td class="sag sayi">{sonuc['takipci_metin']}</td>
                     <td class="sag {sonuc['degisim_sinifi']}">{sonuc['degisim']}</td>
@@ -157,6 +167,7 @@ for h in gecmis_veriler:
 
 grafik_json = json.dumps(grafik_data, ensure_ascii=False)
 
+# MUHTEŞEM TASARIM (HTML) GÜNCELLEMESİ
 html_taslak = """<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -178,7 +189,6 @@ html_taslak = """<!DOCTYPE html>
             min-height: 100vh;
         }
         
-        /* LOGO ARKA PLAN WATERMARK KODU BURADA */
         body::before {
             content: "";
             position: fixed;
@@ -188,13 +198,72 @@ html_taslak = """<!DOCTYPE html>
             width: 80vw;
             height: 80vh;
             max-width: 600px;
-            background-image: url('logo.png'); /* EĞER JPG İSE BURAYI logo.jpg YAP */
+            background-image: url('logo.png');
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.05; /* %5 Saydamlık */
+            opacity: 0.04;
             z-index: -1;
             pointer-events: none;
+        }
+
+        /* --- YENİ EKLENEN: SABİT PROFİL KARTI --- */
+        .profil-karti {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            background: rgba(22, 27, 34, 0.7);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            width: 220px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        .profil-karti:hover {
+            transform: translateY(-5px);
+            border-color: #58a6ff;
+        }
+        .profil-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #58a6ff;
+            margin-bottom: 10px;
+            background-color: #0d1117;
+        }
+        .profil-isim {
+            color: #f0f6fc;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 5px 0;
+            word-wrap: break-word;
+        }
+        .profil-istatistik {
+            background: rgba(13, 17, 23, 0.8);
+            border-radius: 6px;
+            padding: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #8b949e;
+            border: 1px solid #30363d;
+        }
+        .profil-istatistik span {
+            display: block;
+            font-size: 20px;
+            font-weight: bold;
+            color: #56d364;
+            margin-top: 4px;
+        }
+        
+        /* Ekran küçüldüğünde (Laptop/Tablet/Telefon) kartı ortala ve sabitlemeyi bırak */
+        @media (max-width: 1300px) {
+            body { flex-direction: column; align-items: center; }
+            .profil-karti { position: relative; top: 0; left: 0; margin-bottom: 30px; width: 100%; max-width: 300px; }
         }
 
         .container {
@@ -207,17 +276,47 @@ html_taslak = """<!DOCTYPE html>
             margin-bottom: 10px;
             font-weight: 600;
         }
+        .ust-kisim {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
         .guncelleme {
             color: #8b949e;
             font-size: 14px;
-            margin-bottom: 30px;
             background: rgba(22, 27, 34, 0.85);
             padding: 10px 15px;
             border-radius: 6px;
-            display: inline-block;
             border: 1px solid #30363d;
             backdrop-filter: blur(5px);
         }
+        
+        /* --- YENİ EKLENEN: FİLTRE KUTUSU --- */
+        .filtre-kutusu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filtre-kutusu label {
+            color: #8b949e;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #bayrakFiltresi {
+            background: #21262d;
+            color: #f0f6fc;
+            border: 1px solid #30363d;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -228,64 +327,22 @@ html_taslak = """<!DOCTYPE html>
             margin-bottom: 40px;
             backdrop-filter: blur(5px);
         }
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
-        th {
-            background-color: rgba(33, 38, 45, 0.9);
-            color: #f0f6fc;
-            font-weight: 600;
-            border-bottom: 2px solid #30363d;
-        }
-        tr {
-            border-bottom: 1px solid #30363d;
-        }
-        tr:last-child {
-            border-bottom: none;
-        }
-        tr:hover {
-            background-color: rgba(31, 36, 44, 0.95);
-        }
-        .sira {
-            font-weight: bold;
-            color: #8b949e;
-            width: 50px;
-            text-align: center;
-        }
-        .link {
-            color: #58a6ff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .link:hover {
-            text-decoration: underline;
-        }
-        .bayrak {
-            margin-left: 8px;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        img.emoji {
-            height: 1.2em;
-            width: 1.2em;
-            margin: 0 .05em 0 .1em;
-            vertical-align: -0.1em;
-        }
-        .sayi {
-            font-weight: 700;
-            color: #f0f6fc;
-            text-align: right;
-        }
+        th, td { padding: 15px; text-align: left; }
+        th { background-color: rgba(33, 38, 45, 0.9); color: #f0f6fc; font-weight: 600; border-bottom: 2px solid #30363d; }
+        tr { border-bottom: 1px solid #30363d; }
+        tr:last-child { border-bottom: none; }
+        tr:hover { background-color: rgba(31, 36, 44, 0.95); }
+        .sira { font-weight: bold; color: #8b949e; width: 50px; text-align: center; }
+        .link { color: #58a6ff; text-decoration: none; font-weight: 500; }
+        .link:hover { text-decoration: underline; }
+        .bayrak { margin-left: 8px; display: inline-block; vertical-align: middle; }
+        img.emoji { height: 1.2em; width: 1.2em; margin: 0 .05em 0 .1em; vertical-align: -0.1em; }
+        .sayi { font-weight: 700; color: #f0f6fc; text-align: right; }
         .pozitif { color: #56d364; font-weight: 700; text-align: right; }
         .negatif { color: #f85149; font-weight: 700; text-align: right; }
         .notr { color: #8b949e; text-align: right; }
-        th.sag, td.sag {
-            text-align: right;
-        }
-        th.orta, td.orta {
-            text-align: center;
-        }
+        th.sag, td.sag { text-align: right; }
+        th.orta, td.orta { text-align: center; }
         .chart-box {
             background: rgba(22, 27, 34, 0.85);
             padding: 25px;
@@ -293,31 +350,39 @@ html_taslak = """<!DOCTYPE html>
             border: 1px solid #30363d;
             backdrop-filter: blur(5px);
         }
-        .chart-box h2 {
-            color: #58a6ff;
-            font-size: 20px;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        select {
-            background: #21262d;
-            color: #f0f6fc;
-            border: 1px solid #30363d;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 25px;
-            width: 100%;
-            max-width: 320px;
-            outline: none;
-            cursor: pointer;
+        .chart-box h2 { color: #58a6ff; font-size: 20px; margin-top: 0; margin-bottom: 15px; }
+        #hesapSecici {
+            background: #21262d; color: #f0f6fc; border: 1px solid #30363d;
+            padding: 10px 15px; border-radius: 6px; font-size: 14px;
+            margin-bottom: 25px; width: 100%; max-width: 320px;
+            outline: none; cursor: pointer;
         }
     </style>
 </head>
 <body>
+
+    <div class="profil-karti">
+        <img src="logo.png" alt="TGM Logo" class="profil-logo">
+        <div class="profil-isim">@turkishgeopoliticalmaps</div>
+        <div class="profil-istatistik">
+            Güncel Takipçi
+            <span>[BENIM_SAYIM]</span>
+        </div>
+    </div>
+
     <div class="container">
         <h1>📍 Harita Sayfaları Analiz Paneli</h1>
-        <div class="guncelleme">🔄 Son Güncelleme (TSİ): [SON_GUNCELLEME]</div>
+        
+        <div class="ust-kisim">
+            <div class="guncelleme">🔄 Son Güncelleme (TSİ): [SON_GUNCELLEME]</div>
+            
+            <div class="filtre-kutusu">
+                <label for="bayrakFiltresi">Ülke Filtresi:</label>
+                <select id="bayrakFiltresi" onchange="tabloyuFiltrele()">
+                    <option value="hepsi">🌍 Tüm Ülkeler</option>
+                </select>
+            </div>
+        </div>
         
         <table>
             <thead>
@@ -342,8 +407,62 @@ html_taslak = """<!DOCTYPE html>
     </div>
 
     <script>
+        // 1. Emojileri yüksek kaliteye çevir
         twemoji.parse(document.body);
 
+        // 2. Tablo Filtreleme Mantığı
+        const tabloSatirlari = document.querySelectorAll(".tablo-satir");
+        const bayrakSeti = new Set();
+        
+        // Tablodaki benzersiz bayrakları bul ve Set içine at
+        tabloSatirlari.forEach(satir => {
+            // Twemoji kullandığımız için bayrak artık bir <img> etiketi, onun alt (alternatif) textini alıyoruz
+            const emojiImg = satir.querySelector(".bayrak-sutun img");
+            if(emojiImg) {
+                bayrakSeti.add(emojiImg.alt);
+            } else {
+                const duzYazi = satir.querySelector(".bayrak-sutun").innerText.trim();
+                if(duzYazi) bayrakSeti.add(duzYazi);
+            }
+        });
+
+        // Bulunan bayrakları dropdown menüye ekle
+        const filtreSelect = document.getElementById("bayrakFiltresi");
+        bayrakSeti.forEach(bayrak => {
+            const opt = document.createElement("option");
+            opt.value = bayrak;
+            opt.innerText = bayrak + " Ülkesi";
+            filtreSelect.appendChild(opt);
+        });
+        
+        // Twemoji filtre içindeki emojileri de düzeltsin
+        twemoji.parse(filtreSelect);
+
+        function tabloyuFiltrele() {
+            const secilen = filtreSelect.value;
+            let siraSayaci = 1;
+            
+            tabloSatirlari.forEach(satir => {
+                const emojiImg = satir.querySelector(".bayrak-sutun img");
+                let satirBayragi = "";
+                if(emojiImg) {
+                    satirBayragi = emojiImg.alt;
+                } else {
+                    satirBayragi = satir.querySelector(".bayrak-sutun").innerText.trim();
+                }
+
+                if(secilen === "hepsi" || satirBayragi === secilen) {
+                    satir.style.display = ""; // Göster
+                    // Sıra numarasını filtreye göre yeniden düzenle
+                    satir.querySelector(".sira").innerText = siraSayaci;
+                    siraSayaci++;
+                } else {
+                    satir.style.display = "none"; // Gizle
+                }
+            });
+        }
+
+        // 3. Grafik Çizim Mantığı
         const grafikVerisi = [GRAFIK_JSON];
         const select = document.getElementById('hesapSecici');
         
@@ -360,10 +479,7 @@ html_taslak = """<!DOCTYPE html>
         function grafikCiz(hesap) {
             const veri = grafikVerisi[hesap];
             if (!veri) return;
-            
-            if (myChart) {
-                myChart.destroy();
-            }
+            if (myChart) myChart.destroy();
             
             myChart = new Chart(ctx, {
                 type: 'line',
@@ -383,29 +499,16 @@ html_taslak = """<!DOCTYPE html>
                 options: {
                     responsive: true,
                     scales: {
-                        x: {
-                            grid: { color: '#30363d' },
-                            ticks: { color: '#8b949e' }
-                        },
-                        y: {
-                            grid: { color: '#30363d' },
-                            ticks: { color: '#8b949e' }
-                        }
+                        x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                        y: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } }
                     },
-                    plugins: {
-                        legend: { display: false }
-                    }
+                    plugins: { legend: { display: false } }
                 }
             });
         }
         
-        if (select.value) {
-            grafikCiz(select.value);
-        }
-        
-        select.addEventListener('change', (e) => {
-            grafikCiz(e.target.value);
-        });
+        if (select.value) grafikCiz(select.value);
+        select.addEventListener('change', (e) => grafikCiz(e.target.value));
     </script>
 </body>
 </html>"""
@@ -413,8 +516,9 @@ html_taslak = """<!DOCTYPE html>
 html_icerik = html_taslak.replace("[SON_GUNCELLEME]", tarih_formatli)
 html_icerik = html_icerik.replace("[TABLO_SATIRLARI]", satirlar_html)
 html_icerik = html_icerik.replace("[GRAFIK_JSON]", grafik_json)
+html_icerik = html_icerik.replace("[BENIM_SAYIM]", benim_sayim)
 
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_icerik)
 
-print("\nGelişmiş web paneli logolu şekilde başarıyla üretildi!")
+print("\nGelişmiş web paneli (Profil Kartı ve Filtre) başarıyla üretildi!")
