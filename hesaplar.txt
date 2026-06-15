@@ -1,4 +1,4 @@
-the.world.in.maps
-katapultmagazin
-turkishgeopoliticalmaps
-terriblemap
+the.world.in.maps,🇧🇪
+katapultmagazin,🇩🇪
+turkishgeopoliticalmaps,🇹🇷
+terriblemap,🏴󠁧󠁢󠁥󠁮󠁧󠁿
