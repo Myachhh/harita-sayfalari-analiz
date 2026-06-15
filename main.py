@@ -1,32 +1,44 @@
-import instaloader
+import requests
 import os
 import time
+import re
 
-# Gizli kasadan VIP kartımızı (Session ID) alıyoruz
+# Kasadan VIP kartımızı alıyoruz
 session_id = os.environ.get("IG_SESSIONID")
-
-L = instaloader.Instaloader()
 
 print("Rakip analizi başlıyor...\n")
 
-try:
-    # Instagram'a şifreyle değil, VIP kartla (Çerez) giriyoruz
-    L.context._session.cookies.set('sessionid', session_id, domain='.instagram.com')
-    print("Çerez (Cookie) ile bağlantı başarıyla kuruldu!\n")
-except Exception as e:
-    print(f"Bağlantı hatası: {e}")
-    exit()
+# Sanki bilgisayardan giriyormuşuz gibi davranmak için ayarlar
+cookies = {'sessionid': session_id}
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    'Accept-Language': 'en-US,en;q=0.9'
+}
 
+# Hesap listesini okuyoruz
 with open("hesaplar.txt", "r") as dosya:
     hesaplar = dosya.read().splitlines()
 
 for hesap in hesaplar:
-    if hesap.strip(): 
+    hesap = hesap.strip()
+    if hesap: 
         try:
-            profil = instaloader.Profile.from_username(L.context, hesap.strip())
-            print(f"{profil.username} sayfasının takipçi sayısı: {profil.followers}")
+            url = f"https://www.instagram.com/{hesap}/"
+            # Sayfaya normal bir giriş yapıyoruz
+            response = requests.get(url, cookies=cookies, headers=headers)
+            
+            # Sayfanın arka planındaki metinlerden takipçi sayısını cımbızla çekiyoruz
+            match = re.search(r'content="([^"]+?)\s+Followers', response.text)
+            
+            if match:
+                takipci = match.group(1)
+                print(f"{hesap} sayfasının takipçi sayısı: {takipci}")
+            else:
+                print(f"{hesap} sayfası okundu ama sayı bulunamadı. (Gizli profil olabilir)")
+                
+            # Engel yememek için 5 saniye bekleme
             time.sleep(5)
         except Exception as e:
-            print(f"{hesap} sayfası bulunamadı veya bir hata oluştu: {e}")
+            print(f"{hesap} sayfası için hata: {e}")
 
 print("\nVeri çekme işlemi başarıyla tamamlandı!")
