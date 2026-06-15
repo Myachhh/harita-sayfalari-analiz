@@ -1,6 +1,6 @@
 # Harita Sayfaları Analiz Paneli
 
-**Son Güncelleme:** 15.06.2026 - 22:39
+**Son Güncelleme:** 15.06.2026 - 23:12
 
 | Sıra | Sayfa Adı | Takipçi Sayısı | Değişim |
 | :---: | :--- | :---: | :---: |
