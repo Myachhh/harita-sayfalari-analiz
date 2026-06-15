@@ -26,10 +26,10 @@ jobs:
           IG_SESSIONID: ${{ secrets.IG_SESSIONID }}
         run: python main.py
 
-      - name: Dosyayi Depoya Geri Yukle
+      - name: Dosyalari Depoya Geri Yukle
         run: |
           git config --global user.name "Takipci Robotu"
           git config --global user.email "actions@github.com"
-          git add takipciler.csv README.md
-          git commit -m "Takipci verileri ve vitrin guncellendi" || exit 0
+          git add takipciler.csv README.md index.html
+          git commit -m "Veriler ve web paneli guncellendi" || exit 0
           git push
