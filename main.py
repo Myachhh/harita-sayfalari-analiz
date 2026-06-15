@@ -13,7 +13,7 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9'
 }
 
-print("Rakip analizi ve Gelişmiş Web Paneli (Filtre Düzeltmesi) başlıyor...\n")
+print("Rakip analizi ve Müzik Çalarlı Web Paneli hazırlığı başlıyor...\n")
 
 tarih_formatli = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y - %H:%M")
 tarih_kisa = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y")
@@ -142,7 +142,6 @@ with open("README.md", "w", encoding="utf-8") as f:
 satirlar_html = ""
 sira = 1
 for sonuc in sonuclar:
-    # HİLEYİ BURAYA YAPTIK: data-ulke etiketi eklendi!
     satirlar_html += f"""                <tr class="tablo-satir" data-ulke="{sonuc['bayrak']}">
                     <td class="orta sira">{sira}</td>
                     <td>
@@ -254,6 +253,30 @@ html_taslak = """<!DOCTYPE html>
             color: #56d364;
             margin-top: 4px;
         }
+
+        /* YENİ: Müzik Butonu Tasarımı */
+        .muzik-btn {
+            background: #238636;
+            color: #ffffff;
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+        .muzik-btn:hover {
+            background: #2ea043;
+        }
+        .muzik-btn.aktif {
+            background: #da3633;
+        }
+        .muzik-btn.aktif:hover {
+            background: #f85149;
+        }
         
         @media (max-width: 1300px) {
             body { flex-direction: column; align-items: center; }
@@ -354,6 +377,10 @@ html_taslak = """<!DOCTYPE html>
 </head>
 <body>
 
+    <audio id="arkaMuzik" loop>
+        <source src="muzik.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="profil-karti">
         <img src="logo.png" alt="TGM Logo" class="profil-logo">
         <div class="profil-isim">@turkishgeopoliticalmaps</div>
@@ -361,6 +388,7 @@ html_taslak = """<!DOCTYPE html>
             Güncel Takipçi
             <span>[BENIM_SAYIM]</span>
         </div>
+        <button id="muzikButonu" class="muzik-btn">🎵 Müziği Başlat</button>
     </div>
 
     <div class="container">
@@ -400,14 +428,27 @@ html_taslak = """<!DOCTYPE html>
     </div>
 
     <script>
-        // 1. Emojileri yüksek kaliteye çevir
         twemoji.parse(document.body);
 
-        // 2. YENİ KUSURSUZ FİLTRE MANTIĞI
+        // Müzik Butonu İşlevi
+        const sesDosyasi = document.getElementById("arkaMuzik");
+        const sesButonu = document.getElementById("muzikButonu");
+
+        sesButonu.addEventListener("click", function() {
+            if (sesDosyasi.paused) {
+                sesDosyasi.play();
+                sesButonu.classList.add("aktif");
+                sesButonu.innerHTML = "⏸️ Müziği Durdur";
+            } else {
+                sesDosyasi.pause();
+                sesButonu.classList.remove("aktif");
+                sesButonu.innerHTML = "🎵 Müziği Başlat";
+            }
+        });
+
         const tabloSatirlari = document.querySelectorAll(".tablo-satir");
         const bayrakSeti = new Set();
         
-        // Gizli data-ulke etiketinden bayrakları okuyoruz
         tabloSatirlari.forEach(satir => {
             const bayrak = satir.getAttribute("data-ulke").trim();
             if(bayrak !== "") {
@@ -415,7 +456,6 @@ html_taslak = """<!DOCTYPE html>
             }
         });
 
-        // Dropdown menüyü dolduruyoruz
         const filtreSelect = document.getElementById("bayrakFiltresi");
         bayrakSeti.forEach(bayrak => {
             const opt = document.createElement("option");
@@ -424,7 +464,6 @@ html_taslak = """<!DOCTYPE html>
             filtreSelect.appendChild(opt);
         });
         
-        // Filtredeki emojileri de düzelt
         twemoji.parse(filtreSelect);
 
         function tabloyuFiltrele() {
@@ -444,7 +483,6 @@ html_taslak = """<!DOCTYPE html>
             });
         }
 
-        // 3. Grafik Çizim Mantığı
         const grafikVerisi = [GRAFIK_JSON];
         const select = document.getElementById('hesapSecici');
         
@@ -503,4 +541,4 @@ html_icerik = html_icerik.replace("[BENIM_SAYIM]", benim_sayim)
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_icerik)
 
-print("\nGelişmiş web paneli (Kusursuz Filtre ile) başarıyla üretildi!")
+print("\nGelişmiş web paneli müzik çalarla birlikte başarıyla üretildi!")
