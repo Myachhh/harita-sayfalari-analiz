@@ -20,6 +20,5 @@ jobs:
 
       - name: Kodu Calistir
         env:
-          IG_KULLANICI_ADI: ${{ secrets.IG_KULLANICI_ADI }}
-          IG_SIFRE: ${{ secrets.IG_SIFRE }}
+          IG_SESSIONID: ${{ secrets.IG_SESSIONID }}
         run: python main.py
