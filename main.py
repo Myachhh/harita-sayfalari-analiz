@@ -2,20 +2,19 @@ import instaloader
 import os
 import time
 
-# Gizli kasadaki bilgileri alıyoruz
-kullanici_adi = os.environ.get("IG_KULLANICI_ADI")
-sifre = os.environ.get("IG_SIFRE")
+# Gizli kasadan VIP kartımızı (Session ID) alıyoruz
+session_id = os.environ.get("IG_SESSIONID")
 
 L = instaloader.Instaloader()
 
 print("Rakip analizi başlıyor...\n")
 
 try:
-    # Yeni hesabımızla giriş yapıyoruz
-    L.login(kullanici_adi, sifre)
-    print("Instagram'a giriş başarılı!\n")
+    # Instagram'a şifreyle değil, VIP kartla (Çerez) giriyoruz
+    L.context._session.cookies.set('sessionid', session_id, domain='.instagram.com')
+    print("Çerez (Cookie) ile bağlantı başarıyla kuruldu!\n")
 except Exception as e:
-    print(f"Giriş yapılamadı: {e}")
+    print(f"Bağlantı hatası: {e}")
     exit()
 
 with open("hesaplar.txt", "r") as dosya:
@@ -26,9 +25,8 @@ for hesap in hesaplar:
         try:
             profil = instaloader.Profile.from_username(L.context, hesap.strip())
             print(f"{profil.username} sayfasının takipçi sayısı: {profil.followers}")
-            # Engel yememek için her işlemden sonra 5 saniye bekletiyoruz
             time.sleep(5)
         except Exception as e:
-            print(f"{hesap} sayfası bulunamadı veya bir hata oluştu.")
+            print(f"{hesap} sayfası bulunamadı veya bir hata oluştu: {e}")
 
 print("\nVeri çekme işlemi başarıyla tamamlandı!")
