@@ -13,7 +13,7 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9'
 }
 
-print("Rakip analizi ve Gelişmiş Grafik Paneli hazırlığı behaviör...\n")
+print("Rakip analizi ve Gelişmiş Grafik Paneli hazırlığı başlıyor...\n")
 
 tarih_formatli = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y - %H:%M")
 tarih_kisa = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y")
@@ -27,7 +27,6 @@ def sayiya_cevir(metin):
     except:
         return 0
 
-# 1. ADIM: ÖNCEKİ GÜNCELLEMELERİ VE GEÇMİŞİ OKUYORUZ
 gecmis_veriler = {}
 if os.path.exists("takipciler.csv"):
     with open("takipciler.csv", "r", encoding="utf-8") as f:
@@ -74,7 +73,6 @@ for satir in hesaplar:
                     takipci_metin = match.group(1)
                     gercek_sayi = sayiya_cevir(takipci_metin)
                     
-                    # 2. ADIM: BİR ÖNCEKİ VERİYE GÖRE DEĞİŞİM HESAPLAMA
                     degisim_metni = ""
                     degisim_sinifi = "notr"
                     if hesap in gecmis_veriler and len(gecmis_veriler[hesap]) > 0:
@@ -106,7 +104,6 @@ for satir in hesaplar:
                         "degisim_sinifi": degisim_sinifi
                     })
                     
-                    # Grafik verisine bugünün taze kaydını da ekleyelim
                     if hesap not in gecmis_veriler:
                         gecmis_veriler[hesap] = []
                     gecmis_veriler[hesap].append({
@@ -122,10 +119,8 @@ for satir in hesaplar:
 
 dosya_kayit.close()
 
-# Takipçiye göre büyükten küçüğe sıralama
 sonuclar = sorted(sonuclar, key=lambda x: x['gercek_sayi'], reverse=True)
 
-# 3. ADIM: README.MD (VİTRİN) GÜNCELLEME
 readme_icerik = "# Harita Sayfaları Analiz Paneli\n\n"
 readme_icerik += f"**Son Güncelleme:** {tarih_formatli}\n\n"
 readme_icerik += "| Sıra | Sayfa Adı | Takipçi Sayısı | Değişim |\n"
@@ -138,7 +133,6 @@ for sonuc in sonuclar:
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(readme_icerik)
 
-# 4. ADIM: DİNAMİK WEB TABLOSU SATIRLARINI ÜRETME
 satirlar_html = ""
 sira = 1
 for sonuc in sonuclar:
@@ -153,10 +147,8 @@ for sonuc in sonuclar:
                 </tr>\n"""
     sira += 1
 
-# 5. ADIM: GRAFİK İÇİN GEÇMİŞ VERİLERİ JS FORMATINA ÇEVİRME
 grafik_data = {}
 for h in gecmis_veriler:
-    # Grafiğin çok şişmemesi için son 15 güncellemeyi alıyoruz
     kayitlar = gecmis_veriler[h][-15:]
     grafik_data[h] = {
         "labels": [k["tarih"] for k in kayitlar],
@@ -165,7 +157,6 @@ for h in gecmis_veriler:
 
 grafik_json = json.dumps(grafik_data, ensure_ascii=False)
 
-# 6. ADIM: HTML ŞABLONUNU HAZIRLAMA VE YAZMA
 html_taslak = """<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -183,7 +174,29 @@ html_taslak = """<!DOCTYPE html>
             padding: 40px 20px;
             display: flex;
             justify-content: center;
+            position: relative;
+            min-height: 100vh;
         }
+        
+        /* LOGO ARKA PLAN WATERMARK KODU BURADA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vh;
+            max-width: 600px;
+            background-image: url('logo.png'); /* EĞER JPG İSE BURAYI logo.jpg YAP */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.05; /* %5 Saydamlık */
+            z-index: -1;
+            pointer-events: none;
+        }
+
         .container {
             width: 100%;
             max-width: 850px;
@@ -198,27 +211,29 @@ html_taslak = """<!DOCTYPE html>
             color: #8b949e;
             font-size: 14px;
             margin-bottom: 30px;
-            background: #161b22;
+            background: rgba(22, 27, 34, 0.85);
             padding: 10px 15px;
             border-radius: 6px;
             display: inline-block;
             border: 1px solid #30363d;
+            backdrop-filter: blur(5px);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #161b22;
+            background: rgba(22, 27, 34, 0.85);
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #30363d;
             margin-bottom: 40px;
+            backdrop-filter: blur(5px);
         }
         th, td {
             padding: 15px;
             text-align: left;
         }
         th {
-            background-color: #21262d;
+            background-color: rgba(33, 38, 45, 0.9);
             color: #f0f6fc;
             font-weight: 600;
             border-bottom: 2px solid #30363d;
@@ -230,7 +245,7 @@ html_taslak = """<!DOCTYPE html>
             border-bottom: none;
         }
         tr:hover {
-            background-color: #1f242c;
+            background-color: rgba(31, 36, 44, 0.95);
         }
         .sira {
             font-weight: bold;
@@ -272,10 +287,11 @@ html_taslak = """<!DOCTYPE html>
             text-align: center;
         }
         .chart-box {
-            background: #161b22;
+            background: rgba(22, 27, 34, 0.85);
             padding: 25px;
             border-radius: 8px;
             border: 1px solid #30363d;
+            backdrop-filter: blur(5px);
         }
         .chart-box h2 {
             color: #58a6ff;
@@ -320,19 +336,17 @@ html_taslak = """<!DOCTYPE html>
         <div class="chart-box">
             <h2>📈 Sayfa Gelişim Grafiği</h2>
             <select id="hesapSecici">
-                </select>
+            </select>
             <canvas id="gelişimGrafigi"></canvas>
         </div>
     </div>
 
     <script>
-        // PC'deki emojileri yakalayıp resim yapan sihirli kod
         twemoji.parse(document.body);
 
         const grafikVerisi = [GRAFIK_JSON];
         const select = document.getElementById('hesapSecici');
         
-        // Dropdown menüyü dolduruyoruz
         Object.keys(grafikVerisi).forEach(hesap => {
             const opt = document.createElement('option');
             opt.value = hesap;
@@ -385,12 +399,10 @@ html_taslak = """<!DOCTYPE html>
             });
         }
         
-        // İlk açılışta ilk hesabı çiz
         if (select.value) {
             grafikCiz(select.value);
         }
         
-        // Hesap değiştikçe grafiği güncelle
         select.addEventListener('change', (e) => {
             grafikCiz(e.target.value);
         });
@@ -405,4 +417,4 @@ html_icerik = html_icerik.replace("[GRAFIK_JSON]", grafik_json)
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_icerik)
 
-print("\nGelişmiş web paneli grafiklerle birlikte başarıyla üretildi!")
+print("\nGelişmiş web paneli logolu şekilde başarıyla üretildi!")
