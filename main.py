@@ -12,7 +12,7 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9'
 }
 
-print("Rakip analizi ve Web Paneli hazırlığı başlıyor...\n")
+print("Rakip analizi ve Bayraklı Web Paneli hazırlığı başlıyor...\n")
 
 tarih = (datetime.utcnow() + timedelta(hours=3)).strftime("%d.%m.%Y - %H:%M")
 sonuclar = []
@@ -28,38 +28,48 @@ def sayiya_cevir(metin):
 
 dosya_kayit = open("takipciler.csv", "a", encoding="utf-8")
 
-with open("hesaplar.txt", "r") as dosya:
+with open("hesaplar.txt", "r", encoding="utf-8") as dosya:
     hesaplar = dosya.read().splitlines()
 
-for hesap in hesaplar:
-    hesap = hesap.strip()
-    if hesap: 
-        try:
-            url = f"https://www.instagram.com/{hesap}/"
-            response = requests.get(url, cookies=cookies, headers=headers)
-            match = re.search(r'content="([^"]+?)\s+Followers', response.text)
+for satir in hesaplar:
+    satir = satir.strip()
+    if satir:
+        # Satırda virgül var mı kontrol ediyoruz, varsa ismi ve bayrağı ayırıyoruz
+        if "," in satir:
+            parcalar = satir.split(",")
+            hesap = parcalar[0].strip()
+            bayrak = parcalar[1].strip()
+        else:
+            hesap = satir
+            bayrak = "" # Eğer bayrak konulmadıysa boş kalsın
             
-            if match:
-                takipci_metin = match.group(1)
-                gercek_sayi = sayiya_cevir(takipci_metin)
+        if hesap: 
+            try:
+                url = f"https://www.instagram.com/{hesap}/"
+                response = requests.get(url, cookies=cookies, headers=headers)
+                match = re.search(r'content="([^"]+?)\s+Followers', response.text)
                 
-                print(f"{hesap}: {takipci_metin}")
-                dosya_kayit.write(f"{tarih},{hesap},{takipci_metin}\n")
-                
-                sonuclar.append({
-                    "hesap": hesap,
-                    "takipci_metin": takipci_metin,
-                    "gercek_sayi": gercek_sayi
-                })
-            else:
-                print(f"{hesap} okunamadı.")
-            time.sleep(5)
-        except Exception as e:
-            print(f"Hata: {e}")
+                if match:
+                    takipci_metin = match.group(1)
+                    gercek_sayi = sayiya_cevir(takipci_metin)
+                    
+                    print(f"{hesap} {bayrak}: {takipci_metin}")
+                    dosya_kayit.write(f"{tarih},{hesap},{takipci_metin}\n")
+                    
+                    sonuclar.append({
+                        "hesap": hesap,
+                        "bayrak": bayrak,
+                        "takipci_metin": takipci_metin,
+                        "gercek_sayi": gercek_sayi
+                    })
+                else:
+                    print(f"{hesap} okunamadı.")
+                time.sleep(5)
+            except Exception as e:
+                print(f"Hata: {e}")
 
 dosya_kayit.close()
 
-# Büyükten küçüğe sıralama
 sonuclar = sorted(sonuclar, key=lambda x: x['gercek_sayi'], reverse=True)
 
 # 1. README.md Güncelleme
@@ -69,12 +79,13 @@ readme_icerik += "| Sıra | Sayfa Adı | Takipçi Sayısı |\n"
 readme_icerik += "| :---: | :--- | :---: |\n"
 sira = 1
 for sonuc in sonuclar:
-    readme_icerik += f"| {sira} | [@{sonuc['hesap']}](https://instagram.com/{sonuc['hesap']}) | **{sonuc['takipci_metin']}** |\n"
+    isim_gosterim = f"@{sonuc['hesap']} {sonuc['bayrak']}".strip()
+    readme_icerik += f"| {sira} | [{isim_gosterim}](https://instagram.com/{sonuc['hesap']}) | **{sonuc['takipci_metin']}** |\n"
     sira += 1
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(readme_icerik)
 
-# 2. ŞIK VE MODERN WEB SİTESİ (index.html) ÜRETME
+# 2. index.html Üretme
 html_icerik = f"""<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -152,6 +163,11 @@ html_icerik = f"""<!DOCTYPE html>
         .link:hover {{
             text-decoration: underline;
         }}
+        .bayrak {{
+            margin-left: 8px;
+            font-size: 18px;
+            vertical-align: middle;
+        }}
         .sayi {{
             font-weight: 700;
             color: #56d364;
@@ -185,7 +201,10 @@ sira = 1
 for sonuc in sonuclar:
     html_icerik += f"""                <tr>
                     <td class="orta sira">{sira}</td>
-                    <td><a class="link" href="https://instagram.com/{sonuc['hesap']}" target="_blank">@{sonuc['hesap']}</a></td>
+                    <td>
+                        <a class="link" href="https://instagram.com/{sonuc['hesap']}" target="_blank">@{sonuc['hesap']}</a>
+                        <span class="bayrak">{sonuc['bayrak']}</span>
+                    </td>
                     <td class="sag sayi">{sonuc['takipci_metin']}</td>
                 </tr>\n"""
     sira += 1
@@ -199,4 +218,4 @@ html_icerik += """            </tbody>
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_icerik)
 
-print("\nWeb sitesi (index.html) başarıyla üretildi!")
+print("\nWeb sitesi (index.html) bayraklarla başarıyla üretildi!")
