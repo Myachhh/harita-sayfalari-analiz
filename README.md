@@ -1,6 +1,6 @@
 # Harita Sayfaları Analiz Paneli
 
-**Son Güncelleme:** 15.06.2026 - 22:10
+**Son Güncelleme:** 15.06.2026 - 22:39
 
 | Sıra | Sayfa Adı | Takipçi Sayısı | Değişim |
 | :---: | :--- | :---: | :---: |
@@ -96,7 +96,7 @@
 | 90 | [@keylandmaps 🇪🇸](https://instagram.com/keylandmaps) | **5,414** | 0 |
 | 91 | [@forum_harita 🇹🇷](https://instagram.com/forum_harita) | **4,908** | 0 |
 | 92 | [@factsonmap 🇱🇧](https://instagram.com/factsonmap) | **4,772** | 0 |
-| 93 | [@unimaps.de 🇩🇪](https://instagram.com/unimaps.de) | **4,612** | Yeni |
+| 93 | [@unimaps.de 🇩🇪](https://instagram.com/unimaps.de) | **4,612** | 0 |
 | 94 | [@georiginals](https://instagram.com/georiginals) | **4,211** | 0 |
 | 95 | [@kontext_ger 🇩🇪](https://instagram.com/kontext_ger) | **3,736** | 0 |
 | 96 | [@attican_mapper 🇬🇷](https://instagram.com/attican_mapper) | **3,376** | 0 |
