@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harita Sayfaları Analiz Paneli</title>
+    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@14.1.0/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -16,7 +18,7 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 850px;
         }
         h1 {
             color: #58a6ff;
@@ -41,6 +43,7 @@
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid #30363d;
+            margin-bottom: 40px;
         }
         th, td {
             padding: 15px;
@@ -77,26 +80,60 @@
         }
         .bayrak {
             margin-left: 8px;
-            font-size: 18px;
+            display: inline-block;
             vertical-align: middle;
+        }
+        img.emoji {
+            height: 1.2em;
+            width: 1.2em;
+            margin: 0 .05em 0 .1em;
+            vertical-align: -0.1em;
         }
         .sayi {
             font-weight: 700;
-            color: #56d364;
+            color: #f0f6fc;
             text-align: right;
         }
+        .pozitif { color: #56d364; font-weight: 700; text-align: right; }
+        .negatif { color: #f85149; font-weight: 700; text-align: right; }
+        .notr { color: #8b949e; text-align: right; }
         th.sag, td.sag {
             text-align: right;
         }
         th.orta, td.orta {
             text-align: center;
         }
+        .chart-box {
+            background: #161b22;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        .chart-box h2 {
+            color: #58a6ff;
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        select {
+            background: #21262d;
+            color: #f0f6fc;
+            border: 1px solid #30363d;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 320px;
+            outline: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📍 Harita Sayfaları Analiz Paneli</h1>
-        <div class="guncelleme">🔄 Son Güncelleme (TSİ): 15.06.2026 - 21:06</div>
+        <div class="guncelleme">🔄 Son Güncelleme (TSİ): 15.06.2026 - 22:10</div>
         
         <table>
             <thead>
@@ -104,6 +141,7 @@
                     <th class="orta">Sıra</th>
                     <th>Sayfa Adı</th>
                     <th class="sag">Takipçi Sayısı</th>
+                    <th class="sag">Değişim</th>
                 </tr>
             </thead>
             <tbody>
@@ -114,6 +152,7 @@
                         <span class="bayrak">🇧🇪</span>
                     </td>
                     <td class="sag sayi">866K</td>
+                    <td class="sag notr">0</td>
                 </tr>
                 <tr>
                     <td class="orta sira">2</td>
@@ -122,6 +161,7 @@
                         <span class="bayrak">🇩🇪</span>
                     </td>
                     <td class="sag sayi">575K</td>
+                    <td class="sag notr">0</td>
                 </tr>
                 <tr>
                     <td class="orta sira">3</td>
@@ -130,17 +170,1124 @@
                         <span class="bayrak">🇬🇧</span>
                     </td>
                     <td class="sag sayi">441K</td>
+                    <td class="sag notr">0</td>
                 </tr>
                 <tr>
                     <td class="orta sira">4</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mattsurelee" target="_blank">@mattsurelee</a>
+                        <span class="bayrak">🇺🇸</span>
+                    </td>
+                    <td class="sag sayi">414K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">5</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geopolitical.guy" target="_blank">@geopolitical.guy</a>
+                        <span class="bayrak">🇪🇸</span>
+                    </td>
+                    <td class="sag sayi">378K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">6</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/unimaps.world" target="_blank">@unimaps.world</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">354K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">7</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/eu_eurostat" target="_blank">@eu_eurostat</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">319K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">8</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/civixplorer" target="_blank">@civixplorer</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">317K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">9</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/thinkaboutmaps" target="_blank">@thinkaboutmaps</a>
+                        <span class="bayrak">🇧🇷</span>
+                    </td>
+                    <td class="sag sayi">200K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">10</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/maps_black" target="_blank">@maps_black</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">193K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">11</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/atlasova.world" target="_blank">@atlasova.world</a>
+                        <span class="bayrak">🇳🇱</span>
+                    </td>
+                    <td class="sag sayi">184K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">12</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/brilliantmaps" target="_blank">@brilliantmaps</a>
+                        <span class="bayrak">🇬🇧</span>
+                    </td>
+                    <td class="sag sayi">183K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">13</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/amazing__maps" target="_blank">@amazing__maps</a>
+                        <span class="bayrak">🇧🇬</span>
+                    </td>
+                    <td class="sag sayi">160K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">14</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/theeuropeancorrespondent" target="_blank">@theeuropeancorrespondent</a>
+                        <span class="bayrak">🇧🇪</span>
+                    </td>
+                    <td class="sag sayi">147K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">15</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geomapas.gr" target="_blank">@geomapas.gr</a>
+                        <span class="bayrak">🇬🇷</span>
+                    </td>
+                    <td class="sag sayi">141K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">16</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/powerfulcountries" target="_blank">@powerfulcountries</a>
+                        <span class="bayrak">🇺🇸</span>
+                    </td>
+                    <td class="sag sayi">140K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">17</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/haritalariseviyorum" target="_blank">@haritalariseviyorum</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">138K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">18</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/braziliangeopoliticalmaps" target="_blank">@braziliangeopoliticalmaps</a>
+                        <span class="bayrak">🇧🇷</span>
+                    </td>
+                    <td class="sag sayi">116K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">19</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/europe.magazine" target="_blank">@europe.magazine</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">113K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">20</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/everythingaboutmaps" target="_blank">@everythingaboutmaps</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">112K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">21</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/think.geography" target="_blank">@think.geography</a>
+                        <span class="bayrak">🇱🇧</span>
+                    </td>
+                    <td class="sag sayi">109K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">22</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/maps.are.amazing" target="_blank">@maps.are.amazing</a>
+                        <span class="bayrak">🇺🇸</span>
+                    </td>
+                    <td class="sag sayi">109K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">23</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/amazingmap" target="_blank">@amazingmap</a>
+                        <span class="bayrak">🇬🇧</span>
+                    </td>
+                    <td class="sag sayi">107K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">24</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/languages.eu" target="_blank">@languages.eu</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">102K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">25</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapsofeurope" target="_blank">@mapsofeurope</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">99K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">26</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geography_addicted_" target="_blank">@geography_addicted_</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">95K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">27</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/haritaverii" target="_blank">@haritaverii</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">87K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">28</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/very_useful_maps" target="_blank">@very_useful_maps</a>
+                        <span class="bayrak">🇨🇿</span>
+                    </td>
+                    <td class="sag sayi">86K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">29</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo.simplified" target="_blank">@geo.simplified</a>
+                        <span class="bayrak">🇦🇺</span>
+                    </td>
+                    <td class="sag sayi">76K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">30</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo.universe" target="_blank">@geo.universe</a>
+                        <span class="bayrak">🇧🇪</span>
+                    </td>
+                    <td class="sag sayi">70K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">31</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/simeon.netchev" target="_blank">@simeon.netchev</a>
+                        <span class="bayrak">🇨🇭</span>
+                    </td>
+                    <td class="sag sayi">65K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">32</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapas_mundiales" target="_blank">@mapas_mundiales</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">59K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">33</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/aydin_hoca_cografya" target="_blank">@aydin_hoca_cografya</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">59K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">34</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/dalmatian.mapper" target="_blank">@dalmatian.mapper</a>
+                        <span class="bayrak">🇭🇷</span>
+                    </td>
+                    <td class="sag sayi">58K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">35</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/amazinmaps" target="_blank">@amazinmaps</a>
+                        <span class="bayrak">🇳🇱</span>
+                    </td>
+                    <td class="sag sayi">57K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">36</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/georgianmaps" target="_blank">@georgianmaps</a>
+                        <span class="bayrak">🇬🇪</span>
+                    </td>
+                    <td class="sag sayi">57K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">37</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/schengenvisainfo1" target="_blank">@schengenvisainfo1</a>
+                        <span class="bayrak">🇽🇰</span>
+                    </td>
+                    <td class="sag sayi">52K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">38</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/dodi_maps" target="_blank">@dodi_maps</a>
+                        <span class="bayrak">🇸🇰</span>
+                    </td>
+                    <td class="sag sayi">52K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">39</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/rexetruriae" target="_blank">@rexetruriae</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">39K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">40</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapsenthusiast" target="_blank">@mapsenthusiast</a>
+                        <span class="bayrak">🇺🇦</span>
+                    </td>
+                    <td class="sag sayi">37K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">41</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/visaguideworld" target="_blank">@visaguideworld</a>
+                        <span class="bayrak">🇽🇰</span>
+                    </td>
+                    <td class="sag sayi">35K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">42</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/tarihselbilgi" target="_blank">@tarihselbilgi</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">34K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">43</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/morcografya" target="_blank">@morcografya</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">33K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">44</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/hunmapper" target="_blank">@hunmapper</a>
+                        <span class="bayrak">🇭🇺</span>
+                    </td>
+                    <td class="sag sayi">31K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">45</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo.facts_" target="_blank">@geo.facts_</a>
+                        <span class="bayrak">🇧🇷</span>
+                    </td>
+                    <td class="sag sayi">29K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">46</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/maven.mapping" target="_blank">@maven.mapping</a>
+                        <span class="bayrak">🇵🇱</span>
+                    </td>
+                    <td class="sag sayi">29K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">47</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/elections.stats" target="_blank">@elections.stats</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">29K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">48</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/land_geist" target="_blank">@land_geist</a>
+                        <span class="bayrak">🇳🇱</span>
+                    </td>
+                    <td class="sag sayi">27K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">49</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geography_worldmaps" target="_blank">@geography_worldmaps</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">27K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">50</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapasmilhaud" target="_blank">@mapasmilhaud</a>
+                        <span class="bayrak">🇪🇸</span>
+                    </td>
+                    <td class="sag sayi">26K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">51</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/cografigercekler" target="_blank">@cografigercekler</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">25K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">52</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/derkwell_maps" target="_blank">@derkwell_maps</a>
+                        <span class="bayrak">🇳🇱</span>
+                    </td>
+                    <td class="sag sayi">23K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">53</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/averagecartographer" target="_blank">@averagecartographer</a>
+                        <span class="bayrak">🇨🇦</span>
+                    </td>
+                    <td class="sag sayi">22K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">54</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo.mapped" target="_blank">@geo.mapped</a>
+                        <span class="bayrak">🇮🇳</span>
+                    </td>
+                    <td class="sag sayi">21K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">55</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/ir.maps" target="_blank">@ir.maps</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">20K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">56</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/cografizah" target="_blank">@cografizah</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">19K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">57</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/egm_bizarros" target="_blank">@egm_bizarros</a>
+                        <span class="bayrak">🇪🇸</span>
+                    </td>
+                    <td class="sag sayi">19K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">58</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/cactusmapping" target="_blank">@cactusmapping</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">18K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">59</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/poland_maps" target="_blank">@poland_maps</a>
+                        <span class="bayrak">🇵🇱</span>
+                    </td>
+                    <td class="sag sayi">15K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">60</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/imhistriphy" target="_blank">@imhistriphy</a>
+                        <span class="bayrak">🇵🇰</span>
+                    </td>
+                    <td class="sag sayi">14K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">61</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/djtanaliz" target="_blank">@djtanaliz</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">14K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">62</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/theworldinmaps" target="_blank">@theworldinmaps</a>
+                        <span class="bayrak">🇦🇷</span>
+                    </td>
+                    <td class="sag sayi">14K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">63</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/theflagmapguy_2.0" target="_blank">@theflagmapguy_2.0</a>
+                        <span class="bayrak">🇪🇸</span>
+                    </td>
+                    <td class="sag sayi">14K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">64</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mikro.secim" target="_blank">@mikro.secim</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">14K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">65</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/try.asia" target="_blank">@try.asia</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">13K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">66</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/tarix_hazirliq_nabiyeva_bahar" target="_blank">@tarix_hazirliq_nabiyeva_bahar</a>
+                        <span class="bayrak">🇦🇿</span>
+                    </td>
+                    <td class="sag sayi">13K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">67</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/the.history.archives" target="_blank">@the.history.archives</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">12K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">68</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/explainedreality" target="_blank">@explainedreality</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">12K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">69</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/deltamaps" target="_blank">@deltamaps</a>
+                        <span class="bayrak">🇨🇾</span>
+                    </td>
+                    <td class="sag sayi">10K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">70</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/saptadvipa_maps" target="_blank">@saptadvipa_maps</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">10K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">71</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/lupiae.maps" target="_blank">@lupiae.maps</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">10K</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">72</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/_geographically_" target="_blank">@_geographically_</a>
+                        <span class="bayrak">🇨🇿</span>
+                    </td>
+                    <td class="sag sayi">9,352</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">73</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/m4b_lums" target="_blank">@m4b_lums</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">9,347</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">74</td>
                     <td>
                         <a class="link" href="https://instagram.com/turkishgeopoliticalmaps" target="_blank">@turkishgeopoliticalmaps</a>
                         <span class="bayrak">🇹🇷</span>
                     </td>
                     <td class="sag sayi">9,251</td>
+                    <td class="sag notr">0</td>
                 </tr>
+                <tr>
+                    <td class="orta sira">75</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/moregeographyeveryday" target="_blank">@moregeographyeveryday</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">9,013</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">76</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/preussenarchiv" target="_blank">@preussenarchiv</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">8,982</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">77</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/flags_maps_byhand.official" target="_blank">@flags_maps_byhand.official</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">8,913</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">78</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/thebluemaps" target="_blank">@thebluemaps</a>
+                        <span class="bayrak">🇬🇷</span>
+                    </td>
+                    <td class="sag sayi">8,856</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">79</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/azerbeijani" target="_blank">@azerbeijani</a>
+                        <span class="bayrak">🇦🇿</span>
+                    </td>
+                    <td class="sag sayi">8,786</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">80</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapclip.eu" target="_blank">@mapclip.eu</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">8,216</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">81</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mediterranean.mapper" target="_blank">@mediterranean.mapper</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">8,080</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">82</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/try.balkan" target="_blank">@try.balkan</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">8,070</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">83</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/britainmaps_" target="_blank">@britainmaps_</a>
+                        <span class="bayrak">🇬🇧</span>
+                    </td>
+                    <td class="sag sayi">7,872</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">84</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/visualwallmaps" target="_blank">@visualwallmaps</a>
+                        <span class="bayrak">🇨🇦</span>
+                    </td>
+                    <td class="sag sayi">7,795</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">85</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/haritabilim" target="_blank">@haritabilim</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">7,633</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">86</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/srb_maps" target="_blank">@srb_maps</a>
+                        <span class="bayrak">🇷🇸</span>
+                    </td>
+                    <td class="sag sayi">6,601</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">87</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/allygorhy" target="_blank">@allygorhy</a>
+                        <span class="bayrak">🇮🇹</span>
+                    </td>
+                    <td class="sag sayi">6,470</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">88</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/south.europe_geo" target="_blank">@south.europe_geo</a>
+                        <span class="bayrak">🇬🇷</span>
+                    </td>
+                    <td class="sag sayi">5,955</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">89</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/lecartographeroyal" target="_blank">@lecartographeroyal</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">5,904</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">90</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/keylandmaps" target="_blank">@keylandmaps</a>
+                        <span class="bayrak">🇪🇸</span>
+                    </td>
+                    <td class="sag sayi">5,414</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">91</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/forum_harita" target="_blank">@forum_harita</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">4,908</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">92</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/factsonmap" target="_blank">@factsonmap</a>
+                        <span class="bayrak">🇱🇧</span>
+                    </td>
+                    <td class="sag sayi">4,772</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">93</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/unimaps.de" target="_blank">@unimaps.de</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">4,612</td>
+                    <td class="sag pozitif">Yeni</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">94</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/georiginals" target="_blank">@georiginals</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">4,211</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">95</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/kontext_ger" target="_blank">@kontext_ger</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">3,736</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">96</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/attican_mapper" target="_blank">@attican_mapper</a>
+                        <span class="bayrak">🇬🇷</span>
+                    </td>
+                    <td class="sag sayi">3,376</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">97</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapaetudo" target="_blank">@mapaetudo</a>
+                        <span class="bayrak">🇧🇷</span>
+                    </td>
+                    <td class="sag sayi">3,217</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">98</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo_w0rld" target="_blank">@geo_w0rld</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">3,044</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">99</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/southeastasia.languages" target="_blank">@southeastasia.languages</a>
+                        <span class="bayrak">🇲🇾</span>
+                    </td>
+                    <td class="sag sayi">2,954</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">100</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/historical.maps_" target="_blank">@historical.maps_</a>
+                        <span class="bayrak">🇷🇸</span>
+                    </td>
+                    <td class="sag sayi">2,729</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">101</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/east.west.street" target="_blank">@east.west.street</a>
+                        <span class="bayrak">🇵🇹</span>
+                    </td>
+                    <td class="sag sayi">2,645</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">102</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geomapped" target="_blank">@geomapped</a>
+                        <span class="bayrak">🇷🇸</span>
+                    </td>
+                    <td class="sag sayi">2,632</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">103</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/hellenic_mapper" target="_blank">@hellenic_mapper</a>
+                        <span class="bayrak">🇬🇷</span>
+                    </td>
+                    <td class="sag sayi">2,310</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">104</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo.benelux" target="_blank">@geo.benelux</a>
+                        <span class="bayrak">🇧🇪</span>
+                    </td>
+                    <td class="sag sayi">2,114</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">105</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/mapscommunity" target="_blank">@mapscommunity</a>
+                        <span class="bayrak"></span>
+                    </td>
+                    <td class="sag sayi">2,069</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">106</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/_holfat_" target="_blank">@_holfat_</a>
+                        <span class="bayrak">🇫🇷</span>
+                    </td>
+                    <td class="sag sayi">1,961</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">107</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/trend_maps" target="_blank">@trend_maps</a>
+                        <span class="bayrak">🇳🇱</span>
+                    </td>
+                    <td class="sag sayi">1,861</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">108</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/leuchtturm.wiki" target="_blank">@leuchtturm.wiki</a>
+                        <span class="bayrak">🇩🇪</span>
+                    </td>
+                    <td class="sag sayi">1,842</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">109</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/slavonian_history" target="_blank">@slavonian_history</a>
+                        <span class="bayrak">🇭🇷</span>
+                    </td>
+                    <td class="sag sayi">1,734</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">110</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/zijemsk" target="_blank">@zijemsk</a>
+                        <span class="bayrak">🇨🇿</span>
+                    </td>
+                    <td class="sag sayi">1,700</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">111</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/histo_graphical.can" target="_blank">@histo_graphical.can</a>
+                        <span class="bayrak">🇨🇦</span>
+                    </td>
+                    <td class="sag sayi">1,687</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">112</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/gerpol.frame_mapper" target="_blank">@gerpol.frame_mapper</a>
+                        <span class="bayrak">🇺🇦</span>
+                    </td>
+                    <td class="sag sayi">1,485</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">113</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/geo.dutch" target="_blank">@geo.dutch</a>
+                        <span class="bayrak">🇳🇱</span>
+                    </td>
+                    <td class="sag sayi">1,320</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">114</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/backa.mapper" target="_blank">@backa.mapper</a>
+                        <span class="bayrak">🇷🇸</span>
+                    </td>
+                    <td class="sag sayi">1,109</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">115</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/hellenic_cartographer" target="_blank">@hellenic_cartographer</a>
+                        <span class="bayrak">🇬🇷</span>
+                    </td>
+                    <td class="sag sayi">1,079</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">116</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/datailed" target="_blank">@datailed</a>
+                        <span class="bayrak">🇵🇱</span>
+                    </td>
+                    <td class="sag sayi">486</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">117</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/electionsmaps" target="_blank">@electionsmaps</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">425</td>
+                    <td class="sag notr">0</td>
+                </tr>
+                <tr>
+                    <td class="orta sira">118</td>
+                    <td>
+                        <a class="link" href="https://instagram.com/turkischmaps" target="_blank">@turkischmaps</a>
+                        <span class="bayrak">🇹🇷</span>
+                    </td>
+                    <td class="sag sayi">406</td>
+                    <td class="sag notr">0</td>
+                </tr>
+
             </tbody>
         </table>
+
+        <div class="chart-box">
+            <h2>📈 Sayfa Gelişim Grafiği</h2>
+            <select id="hesapSecici">
+                </select>
+            <canvas id="gelişimGrafigi"></canvas>
+        </div>
     </div>
+
+    <script>
+        // PC'deki emojileri yakalayıp resim yapan sihirli kod
+        twemoji.parse(document.body);
+
+        const grafikVerisi = {"the.world.in.maps": {"labels": ["2026", "15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026"], "data": [866000, 866000, 866000, 866000, 866000, 866000]}, "katapultmagazin": {"labels": ["2026", "15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026"], "data": [575000, 575000, 575000, 575000, 575000, 575000]}, "turkishgeopoliticalmaps": {"labels": ["2026", "15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026"], "data": [9251, 9251, 9251, 9251, 9251, 9251]}, "terriblemap": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026", "15.06.2026"], "data": [441000, 441000, 441000, 441000]}, "mattsurelee": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [414000, 414000, 414000]}, "geopolitical.guy": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [378000, 378000, 378000]}, "unimaps.world": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [354000, 354000, 354000]}, "civixplorer": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [317000, 317000, 317000]}, "eu_eurostat": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [319000, 319000, 319000]}, "thinkaboutmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [200000, 200000, 200000]}, "atlasova.world": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [184000, 184000, 184000]}, "maps_black": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [193000, 193000, 193000]}, "brilliantmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [183000, 183000, 183000]}, "amazing__maps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [160000, 160000, 160000]}, "theeuropeancorrespondent": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [147000, 147000, 147000]}, "powerfulcountries": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [140000, 140000, 140000]}, "geomapas.gr": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [141000, 141000, 141000]}, "haritalariseviyorum": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [138000, 138000, 138000]}, "braziliangeopoliticalmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [116000, 116000, 116000]}, "everythingaboutmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [112000, 112000, 112000]}, "europe.magazine": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [113000, 113000, 113000]}, "think.geography": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [109000, 109000, 109000]}, "maps.are.amazing": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [109000, 109000, 109000]}, "languages.eu": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [102000, 102000, 102000]}, "amazingmap": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [107000, 107000, 107000]}, "mapsofeurope": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [99000, 99000, 99000]}, "geography_addicted_": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [95000, 95000, 95000]}, "haritaverii": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [87000, 87000, 87000]}, "very_useful_maps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [86000, 86000, 86000]}, "geo.simplified": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [76000, 76000, 76000]}, "geo.universe": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [70000, 70000, 70000]}, "simeon.netchev": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [65000, 65000, 65000]}, "mapas_mundiales": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [59000, 59000, 59000]}, "dalmatian.mapper": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [58000, 58000, 58000]}, "amazinmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [57000, 57000, 57000]}, "georgianmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [57000, 57000, 57000]}, "aydin_hoca_cografya": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [59000, 59000, 59000]}, "schengenvisainfo1": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [52000, 52000, 52000]}, "dodi_maps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [52000, 52000, 52000]}, "mapsenthusiast": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [37000, 37000, 37000]}, "visaguideworld": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [35000, 35000, 35000]}, "tarihselbilgi": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [34000, 34000, 34000]}, "morcografya": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [33000, 33000, 33000]}, "hunmapper": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [31000, 31000, 31000]}, "geo.facts_": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [29000, 29000, 29000]}, "maven.mapping": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [29000, 29000, 29000]}, "rexetruriae": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [39000, 39000, 39000]}, "land_geist": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [27000, 27000, 27000]}, "geography_worldmaps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [27000, 27000, 27000]}, "elections.stats": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [29000, 29000, 29000]}, "mapasmilhaud": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [26000, 26000, 26000]}, "cografigercekler": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [25000, 25000, 25000]}, "derkwell_maps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [23000, 23000, 23000]}, "averagecartographer": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [22000, 22000, 22000]}, "ir.maps": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [20000, 20000, 20000]}, "cactusmapping": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [18000, 18000, 18000]}, "cografizah": {"labels": ["15.06.2026", "15.06.2026", "15.06.2026"], "data": [19000, 19000, 19000]}, "geo.mapped": {"labels": ["15.06.2026", "15.06.2026"], "data": [21000, 21000]}, "egm_bizarros": {"labels": ["15.06.2026", "15.06.2026"], "data": [19000, 19000]}, "poland_maps": {"labels": ["15.06.2026", "15.06.2026"], "data": [15000, 15000]}, "imhistriphy": {"labels": ["15.06.2026", "15.06.2026"], "data": [14000, 14000]}, "djtanaliz": {"labels": ["15.06.2026", "15.06.2026"], "data": [14000, 14000]}, "theworldinmaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [14000, 14000]}, "theflagmapguy_2.0": {"labels": ["15.06.2026", "15.06.2026"], "data": [14000, 14000]}, "try.asia": {"labels": ["15.06.2026", "15.06.2026"], "data": [13000, 13000]}, "tarix_hazirliq_nabiyeva_bahar": {"labels": ["15.06.2026", "15.06.2026"], "data": [13000, 13000]}, "mikro.secim": {"labels": ["15.06.2026", "15.06.2026"], "data": [14000, 14000]}, "the.history.archives": {"labels": ["15.06.2026", "15.06.2026"], "data": [12000, 12000]}, "explainedreality": {"labels": ["15.06.2026", "15.06.2026"], "data": [12000, 12000]}, "deltamaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [10000, 10000]}, "saptadvipa_maps": {"labels": ["15.06.2026", "15.06.2026"], "data": [10000, 10000]}, "lupiae.maps": {"labels": ["15.06.2026", "15.06.2026"], "data": [10000, 10000]}, "_geographically_": {"labels": ["15.06.2026", "15.06.2026"], "data": [9352, 9352]}, "m4b_lums": {"labels": ["15.06.2026", "15.06.2026"], "data": [9347, 9347]}, "moregeographyeveryday": {"labels": ["15.06.2026", "15.06.2026"], "data": [9013, 9013]}, "preussenarchiv": {"labels": ["15.06.2026", "15.06.2026"], "data": [8982, 8982]}, "thebluemaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [8856, 8856]}, "flags_maps_byhand.official": {"labels": ["15.06.2026", "15.06.2026"], "data": [8913, 8913]}, "mapclip.eu": {"labels": ["15.06.2026", "15.06.2026"], "data": [8216, 8216]}, "mediterranean.mapper": {"labels": ["15.06.2026", "15.06.2026"], "data": [8080, 8080]}, "try.balkan": {"labels": ["15.06.2026", "15.06.2026"], "data": [8070, 8070]}, "britainmaps_": {"labels": ["15.06.2026", "15.06.2026"], "data": [7872, 7872]}, "visualwallmaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [7795, 7795]}, "haritabilim": {"labels": ["15.06.2026", "15.06.2026"], "data": [7633, 7633]}, "azerbeijani": {"labels": ["15.06.2026", "15.06.2026"], "data": [8786, 8786]}, "srb_maps": {"labels": ["15.06.2026", "15.06.2026"], "data": [6601, 6601]}, "allygorhy": {"labels": ["15.06.2026", "15.06.2026"], "data": [6470, 6470]}, "lecartographeroyal": {"labels": ["15.06.2026", "15.06.2026"], "data": [5904, 5904]}, "south.europe_geo": {"labels": ["15.06.2026", "15.06.2026"], "data": [5955, 5955]}, "keylandmaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [5414, 5414]}, "forum_harita": {"labels": ["15.06.2026", "15.06.2026"], "data": [4908, 4908]}, "factsonmap": {"labels": ["15.06.2026", "15.06.2026"], "data": [4772, 4772]}, "georiginals": {"labels": ["15.06.2026", "15.06.2026"], "data": [4211, 4211]}, "attican_mapper": {"labels": ["15.06.2026", "15.06.2026"], "data": [3376, 3376]}, "kontext_ger": {"labels": ["15.06.2026", "15.06.2026"], "data": [3736, 3736]}, "mapaetudo": {"labels": ["15.06.2026", "15.06.2026"], "data": [3217, 3217]}, "geo_w0rld": {"labels": ["15.06.2026", "15.06.2026"], "data": [3044, 3044]}, "southeastasia.languages": {"labels": ["15.06.2026", "15.06.2026"], "data": [2954, 2954]}, "historical.maps_": {"labels": ["15.06.2026", "15.06.2026"], "data": [2729, 2729]}, "geomapped": {"labels": ["15.06.2026", "15.06.2026"], "data": [2632, 2632]}, "east.west.street": {"labels": ["15.06.2026", "15.06.2026"], "data": [2645, 2645]}, "hellenic_mapper": {"labels": ["15.06.2026", "15.06.2026"], "data": [2310, 2310]}, "geo.benelux": {"labels": ["15.06.2026", "15.06.2026"], "data": [2114, 2114]}, "mapscommunity": {"labels": ["15.06.2026", "15.06.2026"], "data": [2069, 2069]}, "_holfat_": {"labels": ["15.06.2026", "15.06.2026"], "data": [1961, 1961]}, "trend_maps": {"labels": ["15.06.2026", "15.06.2026"], "data": [1861, 1861]}, "leuchtturm.wiki": {"labels": ["15.06.2026", "15.06.2026"], "data": [1842, 1842]}, "slavonian_history": {"labels": ["15.06.2026", "15.06.2026"], "data": [1734, 1734]}, "zijemsk": {"labels": ["15.06.2026", "15.06.2026"], "data": [1700, 1700]}, "histo_graphical.can": {"labels": ["15.06.2026", "15.06.2026"], "data": [1687, 1687]}, "ancyra_mapping": {"labels": ["15.06.2026"], "data": [1632]}, "gerpol.frame_mapper": {"labels": ["15.06.2026", "15.06.2026"], "data": [1485, 1485]}, "geo.dutch": {"labels": ["15.06.2026", "15.06.2026"], "data": [1320, 1320]}, "backa.mapper": {"labels": ["15.06.2026", "15.06.2026"], "data": [1109, 1109]}, "hellenic_cartographer": {"labels": ["15.06.2026", "15.06.2026"], "data": [1079, 1079]}, "datailed": {"labels": ["15.06.2026", "15.06.2026"], "data": [486, 486]}, "electionsmaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [425, 425]}, "turkischmaps": {"labels": ["15.06.2026", "15.06.2026"], "data": [406, 406]}, "unimaps.de": {"labels": ["15.06.2026"], "data": [4612]}};
+        const select = document.getElementById('hesapSecici');
+        
+        // Dropdown menüyü dolduruyoruz
+        Object.keys(grafikVerisi).forEach(hesap => {
+            const opt = document.createElement('option');
+            opt.value = hesap;
+            opt.innerHTML = '@' + hesap;
+            select.appendChild(opt);
+        });
+        
+        const ctx = document.getElementById('gelişimGrafigi').getContext('2d');
+        let myChart;
+        
+        function grafikCiz(hesap) {
+            const veri = grafikVerisi[hesap];
+            if (!veri) return;
+            
+            if (myChart) {
+                myChart.destroy();
+            }
+            
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: veri.labels,
+                    datasets: [{
+                        label: 'Takipçi Sayısı',
+                        data: veri.data,
+                        borderColor: '#58a6ff',
+                        backgroundColor: 'rgba(88, 166, 255, 0.05)',
+                        borderWidth: 2,
+                        tension: 0.2,
+                        fill: true,
+                        pointBackgroundColor: '#58a6ff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            grid: { color: '#30363d' },
+                            ticks: { color: '#8b949e' }
+                        },
+                        y: {
+                            grid: { color: '#30363d' },
+                            ticks: { color: '#8b949e' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+        
+        // İlk açılışta ilk hesabı çiz
+        if (select.value) {
+            grafikCiz(select.value);
+        }
+        
+        // Hesap değiştikçe grafiği güncelle
+        select.addEventListener('change', (e) => {
+            grafikCiz(e.target.value);
+        });
+    </script>
 </body>
 </html>
